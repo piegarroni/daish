@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+
+  <head>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css"/>
+    <title> Introduction </title>   
+  </head>
+
+  <body>
+    <div class = "tabs">
+      <div>
+        <h3 style="max-width: 20%; height: auto; float:left; " >Introduction section</h3>
+        <button class="button-13" type="button" style="max-width: 20%; height: auto; float:left; ">
+          <a href= "/indepth">indepth arxiv</a> </button>
+        <button class="button-13" type="button" style="max-width: 20%; height: auto; float:left; ">
+          <a href= "/indepth">indepth pubmed</a> </button>
+        <button class="button-13" type="button" style="max-width: 20%; height: auto; float:left; ">
+          <a href= "/indepth">indepth core</a> </button>
+      </div><br><br>
+    </div>
+
+    <br><div style="border: 0px; margin-left: 10px;">
+      <p>if the plots don't load, go to google trends and reload this page two times:
+      <button class="button-13" type="button" style="max-width: 20%; height: auto; margin-top: 10px;">
+        <a href= "https://trends.google.com/trends/explore?date=now%207-d&q=%2Fm%2F030q7,trial">trends</a> </button></p>
+    </div><br>
+      
+    <div class = "responses">
+      <div class="response" action="/introduction" method="POST">
+        <h4>what is {{topic}} ({{domain}})?</h4>
+        <p> {{what}} </p> 
+      </div> 
+
+      <div class="response" action="/introduction" method="POST">
+        <h4>what topics are related to {{topic}}?</h4>
+        <p> {{what_topics}} </p> 
+      </div>    
+
+      <div class="response" action="/introduction" method="POST">
+        <h4>what are the latest development of {{topic}}?</h4>
+        <p> {{latest}} </p> 
+      </div>   <br>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+  </br>
+ 
+  <div style="width: 100%;"><br>
+      <div class = "plot">
+        <img style="width: 50%; height: auto; margin-top: 60px; float:left; " src='data:image/png;base64,{{network_bytes}}'/>
+        <p>{{message_net}}</p>
+      </div>
+
+      <div class = "plot">
+        <img style="width: 50%; height: auto; margin-top: 60px; float:left; " src='data:image/png;base64,{{trends_bytes}}'/>
+        <p>{{message_trend}}</p>
+      </div> 
+        <br>
+      <div class = "mapplot">
+          <img src='data:image/png;base64,{{map_bytes_topic}}'/>
+        </div>
+     
+      <div class = "mapplot">
+          <img src='data:image/png;base64,{{map_bytes_dom}}'/>
+        </div>
+    </div> 
+    
+  </body>
+</html>

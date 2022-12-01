@@ -1,0 +1,42 @@
+
+<!doctype html>
+<html>
+
+  <head>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css"/>
+    <title> Introduction </title>  
+   
+  </head>
+  <body>
+
+    <h3>Indepth section</h3>
+
+    <form action="/indepth" method="POST">
+
+      <div class = "wrapper">
+
+        <div class = "sidewrapper">
+
+          <label for="p1">How does <input type="text"  id="p1" name="p1"> relate to {{topic}}? </label><br><br>
+          <div action="/indepth">
+            <p> {{relation}} </p> 
+          </div> 
+
+        </div>
+
+        <div class = "articles" action="/indepth">
+          <label for="p1">{{message}}</label><br><br>
+          {% for i in articles %}
+            <p>{{ i }} </p>
+          {% endfor %}
+          {% for i in relation_articles %}
+            <p>{{ i }} </p>
+          {% endfor %}
+          
+        </div>  
+      </div>
+
+    
+    </form>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+
+  <head>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css"/>
+    <title> Home page </title>  
+   
+  </head>
+  <body style="align-items: center;">
+    <h1>dAIsh</h1>
+
+    <form action="/introduction" method="POST">
+
+        <label for="search">Search term: </label>
+          <input type="text"  class="form__input" id="search" name="search">
+
+        <label for="domain">Specify domain for more accurate results: </label>
+          <input type="text"  class="form__input" id="domain" name="domain">
+
+        <input type="submit" name="form" value="Submit" class="button-29">
+    </form>
+
+
+      <p>or be boring and search {{text}} in: </p> 
+
+      <div>
+        <button  class="button-13" type="button">
+          <a href= "https://www.google.com/search?q={{result}}">Google</a> </button>
+
+        <button class="button-13" type="button">
+          <a href= "https://en.wikipedia.org/wiki/{{result}}">Wikipedia</a> </button>
+        
+
+        <button class="button-13" type="button">
+          <a href= "https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q={{result}}&btnG=">Google scholar</a> </button>  
+        
+        <button class="button-13" type="button">
+          <a href= "https://medium.com/search?q={{result}}">medium.com</a> </button>          
+      </div>
+
+      <br><button class="button-13" type="button">
+        <a href= "/indepth">indepth</a> </button>
+
+  </body>
+</html>
