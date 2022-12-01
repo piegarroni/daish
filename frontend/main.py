@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request
 from modules.GPT3 import *
 from modules.twitter_fetcher import *
-from modules.abstracts_scraper import *
 from modules.visualization import *
+import os
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -45,12 +45,10 @@ def introduction():
         #latest = str(ask(quest, openai_key)).strip()
 
         tag = "#" + topic.replace(" ", "")
-        # retrieve twitter data
-        data = retrieve_data(tag, twitter_key, domain)
-        count = counter(data)
-        hashtags = extract_tags(data)
-        keys, values = count_occurrences(hashtags)
 
+        # retrieve twitter data
+        twitterscraper = TwitterScraper(keyword = tag, domain = domain, twitter_key = twitter_key)
+        count, keys, values = twitterscraper.retrieve_data()
 
         try:
             network_bytes = visualize_network(keys, values, count) # network visualization
@@ -61,7 +59,6 @@ def introduction():
             network_bytes=""
             message_net = "network plot not available"
 
-        #trends_bytes = visualize_trends(count) 
         try:  # trends visualization
             trends_bytes = visualize_trends(count) 
             print("TRE")
@@ -85,52 +82,9 @@ def introduction():
             print("FFF")
             map_bytes2=""
 
-            
         return render_template("introduction.html", topic = topic, domain = domain, what= what, what_topics = what_topics, latest = latest, network_bytes = network_bytes, trends_bytes=trends_bytes, map_bytes_topic=map_bytes1, map_bytes_dom=map_bytes2, message_net = message_net, message_trend = message_trend)
     
         
-
-@app.route('/indepth', methods=['GET', 'POST'])
-def indepth():
-    f = open('pass&keys/openai.txt','r')
-    openai_key = f.read()
-    topic = content[-1]
-
-    if request.method=='GET':
-        term = topic.replace(" ", "+")
-        titles, texts, urls, repos = retrieve_arxiv(term, str(50))  # add number of articles repository
-        
-        # scraping arxiv 
-        articles=[]
-        for i, text in enumerate(texts[0:5]):
-            #articles.append([["title: ", titles[i]], ["summary: ", "this whould be the summary of the abstract, the maximum number of tokens should be around 50, i need to make the list look better"],  ["pdf url: ", urls[i]], ["repository url: ", repos[i]]])   
-            articles.append([["title: ", titles[i]], ["summary: ", str(summarize(text, openai_key).strip())],  ["pdf url: ", urls[i]], ["repository url: ", repos[i]]])    
-
-        message = "We found this articles about {} online, here we present a short summary and some more basic information".format(topic)
-        return render_template('indepth.html', topic = topic, articles=articles, message = message) 
-
-    if request.method=='POST':
-        #input related topic
-        related=request.form['p1']
-        
-        # querying gpt3
-        quest=f"Describe the relation between " + topic + " and " + related 
-        #relation = "not available"
-        relation = str(ask(quest, openai_key)).strip()
-
-        
-        # scraping arxiv on relation 
-        term = '"' + topic.replace(" ", "+") + '"' + "+" + '"' + related.replace(" ", "+") + '"' 
-        titles, texts, urls, repos = retrieve_arxiv(term, str(50))  # add number of articles repository
-        relation_articles=[]
-
-        for i, text in enumerate(texts[0:5]):
-            relation_articles.append([["title: ", titles[i]], ["summary: ", "not available"],  ["pdf url: ", urls[i]], ["repository url: ", repos[i]]])    
-          #  relation_articles.append([["title: ", titles[i]], ["summary: ", str(summarize(text, openai_key).strip())],  ["pdf url: ", urls[i]], ["repository url: ", repos[i]]])    
-        message = "We found this articles about the relation of {} and {} online, here we present a short summary and some more basic information".format(topic, related)
-
-        return render_template("indepth.html", topic = topic, related = related, relation=relation, relation_articles = relation_articles, message = message)
-
 
 
 def start():

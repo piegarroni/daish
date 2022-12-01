@@ -31,6 +31,9 @@ def retrieve_google(query):
 
 
 def visualize_network(keys, values, count):
+    """
+    Method to plot the network. Takes the keys (co-occurrences), values (co-occurrences count) and count (word occurrence count)
+    """
     keys=keys[-50:]
     values=values[-50:]
     plt.figure(figsize=(13, 10))
@@ -89,7 +92,12 @@ def visualize_network(keys, values, count):
     return data
 
 
-def visualize_trends(count):
+def visualize_trends(count: dict):
+    """
+    Visualize the relative and absolute trend plots of the 4 most related topics
+    """
+
+    # sort dictionary keys by their value
     dictio = {k: v for k, v in sorted(count.items(), key=lambda item: item[1])}
 
     # extract 4 most relevant topics and correct them
@@ -103,7 +111,7 @@ def visualize_trends(count):
     trends_norm = pytrends.interest_over_time()
     trends_norm = pd.DataFrame(trends_norm)
     
-
+    # relative plot
     for i in topics[1:]:
         pytrends.build_payload([i], timeframe='all') 
         trend = pytrends.interest_over_time()
@@ -112,10 +120,6 @@ def visualize_trends(count):
             trends_norm[i] = trend[i]    
         except:
             pass  
- 
-
-    # trends plot
-
     fig, ax = plt.subplots(2, figsize=(13, 10))
     for i in list(set(topics)):
         try:
@@ -125,7 +129,7 @@ def visualize_trends(count):
     ax[0].set_ylabel("Relative score (%)")
     ax[0].set_title("Relative trends")
 
-    # magnitude plot    
+    # absolute plot    
     pytrends.build_payload(kw_list=topics, timeframe='all') 
     trends = pytrends.interest_over_time()
     for i in list(set(topics)):
@@ -140,14 +144,13 @@ def visualize_trends(count):
     plt.style.use('ggplot')
 
     # return bytes to decode in the html template
-
     buf_trends = io.BytesIO()
     fig.savefig(buf_trends, format="png")
     data = base64.b64encode(buf_trends.getbuffer()).decode("ascii")
     return data
 
 
-def visualize_worldmap(topic):
+def visualize_worldmap(topic: str):
     """
     Visualize the popularity of the search term on a world map
     """
